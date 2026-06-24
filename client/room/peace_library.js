@@ -1,4 +1,4 @@
-import { GameMode, MapService, Player, Teams, Timers, Color } from 'pixel-combats-2';
+import { GameMode, MapService, Player, Teams, Timers, Color, MapRepository } from 'pixel-combats-2';
 
 const ADMIN_ID = "EBBD6F896A740312";
 
@@ -43,6 +43,7 @@ GameMode.OnStart.Add(function () {
     InitializeMapAndWorld();
     GameMode.Parameters.Get("TeamProp").Value = true;
     Timers.Get("WorldTick").Start(5, true);
+    GameMode.Initialization.Create();
 });
 
 Player.OnJoin.Add(function (player) {
