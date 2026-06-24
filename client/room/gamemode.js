@@ -1,4 +1,4 @@
-import * as peace from './peace_library.js';
+import { GameMode } from 'pixel-combats-2';
 
-peace.configure();
-peace.create_teams();
+GameMode.OnStart.Add(function () {
+});
