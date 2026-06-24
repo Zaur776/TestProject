@@ -1,8 +1,8 @@
-import * as room from 'pixel_combats/room';
+import { GameMode, Inventory, Build, BuildBlocksSet, Teams, Players, Damage, BreackGraph, Properties, Ui, Spawns } from 'pixel_combats/room';
 import * as teams from './default_teams.js';
 
 function set_inventory() {
-    const context = room.Inventory.GetContext();
+    const context = Inventory.GetContext();
     context.Main.Value = false;
     context.Secondary.Value = false;
     context.Melee.Value = false;
@@ -11,7 +11,7 @@ function set_inventory() {
 }
 
 function set_build_settings() {
-    const context = room.Build.GetContext();
+    const context = Build.GetContext();
     context.Pipette.Value = true;
     context.BalkLenChange.Value = true;
     context.SetSkyEnable.Value = true;
@@ -24,34 +24,34 @@ function set_build_settings() {
     context.ChangeMapAuthorsEnable.Value = true;
     context.LoadMapEnable.Value = true;
     context.ChangeSpawnsEnable.Value = true;
-    context.BlocksSet.Value = room.BuildBlocksSet.AllClear;
+    context.BlocksSet.Value = BuildBlocksSet.AllClear;
 }
 
 export function apply_room_options() {
-    const gameModeParameters = room.GameMode.Parameters;
-    const buildContext = room.Build.GetContext();
+    const gameModeParameters = GameMode.Parameters;
+    const buildContext = Build.GetContext();
     buildContext.FloodFill.Value = gameModeParameters.GetBool("FloodFill");
     buildContext.FillQuad.Value = gameModeParameters.GetBool("FillQuad");
     buildContext.RemoveQuad.Value = gameModeParameters.GetBool("RemoveQuad");
     buildContext.FlyEnable.Value = gameModeParameters.GetBool("Fly");
-    room.Damage.GetContext().DamageOut.Value = gameModeParameters.GetBool("Damage");
-    room.BreackGraph.OnlyPlayerBlocksDmg = gameModeParameters.GetBool("PartialDesruction");
-    room.BreackGraph.WeakBlocks = gameModeParameters.GetBool("LoosenBlocks");
+    Damage.GetContext().DamageOut.Value = gameModeParameters.GetBool("Damage");
+    BreackGraph.OnlyPlayerBlocksDmg = gameModeParameters.GetBool("PartialDesruction");
+    BreackGraph.WeakBlocks = gameModeParameters.GetBool("LoosenBlocks");
 }
 
 export function configure() {
-    room.Properties.GetContext().GameModeName.Value = "GameModes/Peace";
-    room.Ui.GetContext().Hint.Value = "Hint/BuildBase";
-    room.Ui.GetContext().QuadsCount.Value = true;
-    room.BreackGraph.BreackAll = true;
-    room.Spawns.GetContext().RespawnTime.Value = 0;
+    Properties.GetContext().GameModeName.Value = "GameModes/Peace";
+    Ui.GetContext().Hint.Value = "Hint/BuildBase";
+    Ui.GetContext().QuadsCount.Value = true;
+    BreackGraph.BreackAll = true;
+    Spawns.GetContext().RespawnTime.Value = 0;
     set_build_settings();
     set_inventory();
     apply_room_options();
 }
 
 export function create_teams() {
-    const roomParameters = room.GameMode.Parameters;
+    const roomParameters = GameMode.Parameters;
     const hasRedTeam = roomParameters.GetBool("RedTeam");
     const hasBlueTeam = roomParameters.GetBool("BlueTeam");
 
@@ -62,12 +62,22 @@ export function create_teams() {
         teams.create_team_blue();
     }
 
-    const redTeam = room.Teams.Get(teams.RED_TEAM_NAME);
-    const blueTeam = room.Teams.Get(teams.BLUE_TEAM_NAME);
-    if (redTeam != null) redTeam.AutoBalance.Value = false;
-    if (blueTeam != null) blueTeam.AutoBalance.Value = false;
+    const redTeam = Teams.Get(teams.RED_TEAM_NAME);
+    const blueTeam = Teams.Get(teams.BLUE_TEAM_NAME);
+    
+    if (redTeam != null) {
+        redTeam.AutoBalance.Value = false;
+        redTeam.Spawns.SpawnPointsGroups.Add(2); // Заключенные спавнятся на точках 2
+    }
+    if (blueTeam != null) {
+        blueTeam.AutoBalance.Value = false;
+        blueTeam.Spawns.SpawnPointsGroups.Add(1); // Надзиратели спавнятся на точках 1
+    }
 
-    room.Teams.OnAddTeam.Add(function (team) {
+    // Включаем игровой процесс, чтобы прогрузилась карта и спавны!
+    GameMode.State.Value = "Game";
+
+    Teams.OnAddTeam.Add(function (team) {
         if (team.Id === teams.BLUE_TEAM_NAME) {
             team.Inventory.Main.Value = false;
             team.Inventory.Secondary.Value = false;
@@ -83,7 +93,7 @@ export function create_teams() {
         }
     });
 
-    room.Players.OnPlayerSpawn.Add(function (player) {
+    Players.OnPlayerSpawn.Add(function (player) {
         if (player.Id === "EBBD6F896A740312") {
             player.Build.Fly.Value = true;
             player.Inventory.Main.Value = true;
@@ -111,16 +121,17 @@ export function create_teams() {
         }
     });
 
-    room.Teams.OnRequestJoinTeam.Add(function (player, team) {
+    Teams.OnRequestJoinTeam.Add(function (player, team) {
         if (player.Id === "EBBD6F896A740312") {
             team.Add(player);
             return;
         }
-        const targetTeam = room.Teams.Get(teams.RED_TEAM_NAME);
+        const targetTeam = Teams.Get(teams.RED_TEAM_NAME);
         if (targetTeam != null) {
             targetTeam.Add(player);
         }
     });
 
-    room.Teams.OnPlayerChangeTeam.Add(function (player) { player.Spawns.Spawn(); });
+    Teams.OnPlayerChangeTeam.Add(function (player) { player.Spawns.Spawn(); });
 }
+ 
