@@ -1,27 +1,30 @@
 {
   "ApiVersion": 2,
-  "Name": "PEACE",
-  "Description": "Мирный режим",
+  "Name": "PRISON",
+  "Description": "Prison Mode",
   "StartClientVersion": 532,
   "MapLists": [
     {
       "MapListId": 324,
-      "Name": "Официальные карты"
+      "Name": "Official Maps"
     }
   ],
   "Parameters": {
     "Bool": [
       {
         "Name": "Damage",
-        "DisplayName": "GmParams/Damage"
+        "DisplayName": "GmParams/Damage",
+        "Default": true
       },
       {
-        "Name": "PartialDesruction",
-        "DisplayName": "GmParams/PartialDesruction"
+        "Name": "PartialDestruction",
+        "DisplayName": "GmParams/PartialDestruction",
+        "Default": false
       },
       {
         "Name": "LoosenBlocks",
-        "DisplayName": "GmParams/LoosenBlocks"
+        "DisplayName": "GmParams/LoosenBlocks",
+        "Default": false
       },
       {
         "Name": "RedTeam",
@@ -34,25 +37,9 @@
         "Default": true
       },
       {
-        "Name": "BlueHasNothing",
-        "DisplayName": "GmParams/BlueHasNothing"
-      },
-      {
-        "Name": "FloodFill",
-        "DisplayName": "GmParams/FloodFill"
-      },
-      {
-        "Name": "FillQuad",
-        "DisplayName": "GmParams/FillQuad"
-      },
-      {
-        "Name": "RemoveQuad",
-        "DisplayName": "GmParams/RemoveQuad"
-      },
-      {
         "Name": "Fly",
         "DisplayName": "GmParams/Fly",
-        "Default": true
+        "Default": false
       }
     ]
   }
