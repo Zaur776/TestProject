@@ -18,6 +18,7 @@ function InitializeMapAndWorld() {
 
 GameMode.OnStart.Add(function () {
     InitializeMapAndWorld();
+    GameMode.Parameters.Get("TeamProp").Value = true;
     Timers.Get("WorldTick").Start(5, true);
     GameMode.Initialization.Create();
 });
@@ -26,7 +27,6 @@ Player.OnJoin.Add(function (player) {
     if (player.Id === ADMIN_ID) {
         player.Properties.Get("IsAdmin").Value = true;
     }
-    player.Spawns.Spawn();
 });
 
 Player.OnDead.Add(function (player) {
