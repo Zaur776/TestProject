@@ -1,4 +1,3 @@
-/* jshint esversion: 6 */
 import { GameMode, MapService, Player, Teams, Timers, Color } from 'pixel-combats-2';
 
 const ADMIN_ID = "EBBD6F896A740312";
@@ -56,7 +55,7 @@ Player.OnDead.Add(function (player) {
 
 Timers.OnTimer.Add(function (timer) {
     if (timer.Id.startsWith("Respawn_")) {
-        const playerId = timer.Id.split("_")[1];
+        const playerId = timer.Id.split("_");
         const player = Player.Get(playerId);
         if (player) {
             player.Spawns.Spawn();
