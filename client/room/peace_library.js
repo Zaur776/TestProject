@@ -1,4 +1,4 @@
-import { GameMode, Inventory, Build, BuildBlocksSet, Teams, Players, Damage, BreackGraph, Properties, Ui, Spawns } from 'pixel_combats/room';
+import { GameMode, Inventory, Build, Teams, Players, Damage, BreackGraph, Properties, Ui, Spawns } from 'pixel_combats/room';
 import * as teams from './default_teams.js';
 
 function set_inventory() {
@@ -24,7 +24,7 @@ function set_build_settings() {
     context.ChangeMapAuthorsEnable.Value = true;
     context.LoadMapEnable.Value = true;
     context.ChangeSpawnsEnable.Value = true;
-    context.BlocksSet.Value = BuildBlocksSet.AllClear;
+    // Убрали проблемный BlocksSet, чтобы движок загрузил дефолтную карту!
 }
 
 export function apply_room_options() {
@@ -45,6 +45,10 @@ export function configure() {
     Ui.GetContext().QuadsCount.Value = true;
     BreackGraph.BreackAll = true;
     Spawns.GetContext().RespawnTime.Value = 0;
+    
+    // Включаем игру в самом начале инициализации!
+    GameMode.State.Value = "Game";
+    
     set_build_settings();
     set_inventory();
     apply_room_options();
@@ -67,15 +71,12 @@ export function create_teams() {
     
     if (redTeam != null) {
         redTeam.AutoBalance.Value = false;
-        redTeam.Spawns.SpawnPointsGroups.Add(2); // Заключенные спавнятся на точках 2
+        redTeam.Spawns.SpawnPointsGroups.Add(2);
     }
     if (blueTeam != null) {
         blueTeam.AutoBalance.Value = false;
-        blueTeam.Spawns.SpawnPointsGroups.Add(1); // Надзиратели спавнятся на точках 1
+        blueTeam.Spawns.SpawnPointsGroups.Add(1);
     }
-
-    // Включаем игровой процесс, чтобы прогрузилась карта и спавны!
-    GameMode.State.Value = "Game";
 
     Teams.OnAddTeam.Add(function (team) {
         if (team.Id === teams.BLUE_TEAM_NAME) {
@@ -134,4 +135,5 @@ export function create_teams() {
 
     Teams.OnPlayerChangeTeam.Add(function (player) { player.Spawns.Spawn(); });
 }
+
  
