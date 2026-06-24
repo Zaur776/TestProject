@@ -17,7 +17,7 @@
         "Default": true
       },
       {
-        "Name": "PartialDestruction",
+        "Name": "PartialDesruction",
         "DisplayName": "Destruction",
         "Default": false
       },
