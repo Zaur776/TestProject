@@ -13,32 +13,32 @@
     "Bool": [
       {
         "Name": "Damage",
-        "DisplayName": "GmParams/Damage",
+        "DisplayName": "Damage",
         "Default": true
       },
       {
         "Name": "PartialDestruction",
-        "DisplayName": "GmParams/PartialDestruction",
+        "DisplayName": "Destruction",
         "Default": false
       },
       {
         "Name": "LoosenBlocks",
-        "DisplayName": "GmParams/LoosenBlocks",
+        "DisplayName": "Loosen Blocks",
         "Default": false
       },
       {
         "Name": "RedTeam",
-        "DisplayName": "Teams/Red",
+        "DisplayName": "Prisoners Team",
         "Default": true
       },
       {
         "Name": "BlueTeam",
-        "DisplayName": "Teams/Blue",
+        "DisplayName": "Guards Team",
         "Default": true
       },
       {
         "Name": "Fly",
-        "DisplayName": "GmParams/Fly",
+        "DisplayName": "Fly Mode",
         "Default": false
       }
     ]
