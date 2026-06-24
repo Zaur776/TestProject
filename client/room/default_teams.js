@@ -18,4 +18,3 @@ export function create_team_blue() {
     Teams.Get(BLUE_TEAM_NAME).Spawns.SpawnPointsGroups.Add(BLUE_TEAM_SPAWN_POINTS_GROUP);
     return Teams.Get(BLUE_TEAM_NAME);
 }
-
