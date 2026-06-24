@@ -1,4 +1,4 @@
-import { GameMode, Inventory, Build, Teams, Players, Damage, BreackGraph, Properties, Ui, Spawns } from 'pixel_combats/room';
+import { GameMode, Inventory, Build, BuildBlocksSet, Teams, Players, Damage, BreackGraph, Properties, Ui, Spawns } from 'pixel_combats/room';
 import * as teams from './default_teams.js';
 
 function set_inventory() {
@@ -24,19 +24,21 @@ function set_build_settings() {
     context.ChangeMapAuthorsEnable.Value = true;
     context.LoadMapEnable.Value = true;
     context.ChangeSpawnsEnable.Value = true;
-    // Убрали проблемный BlocksSet, чтобы движок загрузил дефолтную карту!
+    context.BlocksSet.Value = BuildBlocksSet.AllClear;
 }
 
 export function apply_room_options() {
-    const gameModeParameters = GameMode.Parameters;
     const buildContext = Build.GetContext();
-    buildContext.FloodFill.Value = gameModeParameters.GetBool("FloodFill");
-    buildContext.FillQuad.Value = gameModeParameters.GetBool("FillQuad");
-    buildContext.RemoveQuad.Value = gameModeParameters.GetBool("RemoveQuad");
-    buildContext.FlyEnable.Value = gameModeParameters.GetBool("Fly");
-    Damage.GetContext().DamageOut.Value = gameModeParameters.GetBool("Damage");
-    BreackGraph.OnlyPlayerBlocksDmg = gameModeParameters.GetBool("PartialDesruction");
-    BreackGraph.WeakBlocks = gameModeParameters.GetBool("LoosenBlocks");
+    
+    // ЖЕСТКО ВКЛЮЧАЕМ ВСЕ ОПЦИИ КАРТЫ (без запросов к json)
+    buildContext.FloodFill.Value = true;
+    buildContext.FillQuad.Value = true;
+    buildContext.RemoveQuad.Value = true;
+    buildContext.FlyEnable.Value = true;
+    
+    Damage.GetContext().DamageOut.Value = true;
+    BreackGraph.OnlyPlayerBlocksDmg = false;
+    BreackGraph.WeakBlocks = false;
 }
 
 export function configure() {
@@ -46,7 +48,7 @@ export function configure() {
     BreackGraph.BreackAll = true;
     Spawns.GetContext().RespawnTime.Value = 0;
     
-    // Включаем игру в самом начале инициализации!
+    // ВКЛЮЧАЕМ СЕРВЕР ПРИНУДИТЕЛЬНО
     GameMode.State.Value = "Game";
     
     set_build_settings();
@@ -55,27 +57,20 @@ export function configure() {
 }
 
 export function create_teams() {
-    const roomParameters = GameMode.Parameters;
-    const hasRedTeam = roomParameters.GetBool("RedTeam");
-    const hasBlueTeam = roomParameters.GetBool("BlueTeam");
-
-    if (hasRedTeam || (!hasRedTeam && !hasBlueTeam)) {
-        teams.create_team_red();
-    }
-    if (hasBlueTeam || (!hasRedTeam && !hasBlueTeam)) {
-        teams.create_team_blue();
-    }
+    // Создаем команды напрямую
+    teams.create_team_red();
+    teams.create_team_blue();
 
     const redTeam = Teams.Get(teams.RED_TEAM_NAME);
     const blueTeam = Teams.Get(teams.BLUE_TEAM_NAME);
     
     if (redTeam != null) {
         redTeam.AutoBalance.Value = false;
-        redTeam.Spawns.SpawnPointsGroups.Add(2);
+        redTeam.Spawns.SpawnPointsGroups.Add(2); // Точки спавна заключенных
     }
     if (blueTeam != null) {
         blueTeam.AutoBalance.Value = false;
-        blueTeam.Spawns.SpawnPointsGroups.Add(1);
+        blueTeam.Spawns.SpawnPointsGroups.Add(1); // Точки спавна надзирателей
     }
 
     Teams.OnAddTeam.Add(function (team) {
@@ -135,5 +130,4 @@ export function create_teams() {
 
     Teams.OnPlayerChangeTeam.Add(function (player) { player.Spawns.Spawn(); });
 }
-
  
