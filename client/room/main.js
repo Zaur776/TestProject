@@ -1,2 +1,5 @@
+import { create_team_red, create_team_blue } from './default_teams.js';
 import './peace_library.js';
-import './default_teams.js';
+
+create_team_red();
+create_team_blue();
