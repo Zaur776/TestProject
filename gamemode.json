@@ -3,12 +3,6 @@
   "Name": "PRISON",
   "Description": "Prison Mode",
   "StartClientVersion": 532,
-  "MapLists": [
-    {
-      "MapListId": 324,
-      "Name": "Official Maps"
-    }
-  ],
   "Parameters": {
     "Bool": [
       {
@@ -44,3 +38,4 @@
     ]
   }
 }
+ 
